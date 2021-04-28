@@ -59,19 +59,23 @@ def rsa_decrypt(ciphertext: str) -> str:
     # this group RSA encrypts their messages byte by byte, so we first need to split the ciphertext into chunks
     ciphertext_bytes = [ciphertext[pos:pos + 8] for pos in range(0, len(ciphertext), 8)]
     plaintext = [(int(byte, 16) ** injected_key['d']) % injected_key['n'] for byte in ciphertext_bytes]
+    plaintext = [chr(byte) for byte in plaintext]
     return ''.join(plaintext)
 
 def rsa_encrypt(plaintext: str, site: str) -> str:
-    e = public_keys[site]['e']
-    n = public_keys[site]['n']
+    if site == 'client':
+        target = 'server'
+    else:
+        target = 'client'
+
+    e = public_keys[target]['e']
+    n = public_keys[target]['n']
     ciphertext = []
     for c in plaintext:
         tmp = ord(c)
         tmp = (tmp ** e) % n
         ciphertext.append('{}'.format(tmp).zfill(8))
-    
-
-
+    return ''.join(ciphertext)
 
 inputs = [client_conn, server_facing]
 while inputs:
