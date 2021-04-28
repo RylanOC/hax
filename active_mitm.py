@@ -6,6 +6,7 @@ server_facing.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server_facing.connect(('localhost', 8081))
 
 client_facing = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_facing.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 client_facing.bind(('localhost', 8082))
 client_facing.listen(1)
 client_conn, client_addr = client_facing.accept()
